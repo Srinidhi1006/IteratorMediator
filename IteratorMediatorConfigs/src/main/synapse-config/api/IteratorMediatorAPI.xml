@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api context="/iterator" name="IteratorMediatorAPI" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET">
+        <inSequence>
+            <payloadFactory media-type="json">
+                <format>{&#xd;
+    "Regions_SendToNaql": {&#xd;
+        "Rows": [&#xd;
+            {&#xd;
+                "AreaName": "منطقة الرياض",&#xd;
+                "Status": "1",&#xd;
+                "AriaID": "20000"&#xd;
+            },&#xd;
+            {&#xd;
+                "AreaName": "المنطقة الشرقية",&#xd;
+                "Status": "1",&#xd;
+                "AriaID": "40000"&#xd;
+            },&#xd;
+            {&#xd;
+                "AreaName": "منطقة الحدود الشمالية",&#xd;
+                "Status": "1",&#xd;
+                "AriaID": "150000"&#xd;
+            }&#xd;
+        ]&#xd;
+    }&#xd;
+}&#xd;
+</format>
+                <args/>
+            </payloadFactory>
+            <iterate expression="json-eval($.Regions_SendToNaql.Rows)" id="id" sequential="true">
+                <target>
+                    <sequence>
+                        <log level="full" separator="  ,  "/>
+                        <call>
+                            <endpoint key="IteratorEP"/>
+                        </call>
+                    </sequence>
+                </target>
+            </iterate>
+            <log/>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </resource>
+</api>
